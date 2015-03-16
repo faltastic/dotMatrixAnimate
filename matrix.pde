@@ -1,6 +1,8 @@
 int N = 8;
 int ledSize = 50;
 
+int n=1;
+
 int[][] leds = new int[N][N];
 int[][] newleds = new int[N][N];
 PImage img;
@@ -13,13 +15,13 @@ void setup() {
   clearLeds();
 rectMode(CORNER);
 
-img = loadImage("1-7.png");
+img = loadImage("http://s13.postimg.org/9z74r9707/1_7.png");
 //  setPattern(pattern);
 }
 
 void draw() {
     display();
-    println(leds[3][3]);
+   // println(leds[3][3]);
    
    //pattern = ++pattern % numPatterns;
     //slidePattern(pattern, 60);
@@ -27,9 +29,33 @@ void draw() {
 
 void keyPressed(){
  if(key=='s') slidePattern();
+ 
+ if(key=='r') {n++; switchRows(n%8,(n+4)%8);}
+ if(key=='c') {n++; switchColumns(n%8,(n+4)%8);}
+ 
  if(key=='i') imgtoMatrix(img);
  
 }
+
+void switchRows(int n, int m){
+  for (int j = 0; j < 8; j++) {
+    int k = leds[j][m];
+    newleds[j][m]=leds[j][n];
+    newleds[j][n] = k;
+  }
+  leds = newleds;
+}
+ 
+
+void switchColumns(int n, int m){
+  for (int j = 0; j < 8; j++) {
+    int k = leds[m][j];
+    newleds[m][j]=leds[n][j];
+    newleds[n][j] = k;
+  }
+  leds = newleds;
+}
+   
 
 void slidePattern() {
   
@@ -117,7 +143,7 @@ void ledstoString(){
   }
   
   pat += "};";
-//  println(pat);
+ println(pat);
 }  
 
 
