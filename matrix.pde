@@ -5,22 +5,73 @@ int n=1;
 
 int[][] leds = new int[N][N];
 int[][] newleds = new int[N][N];
+
+
+
 PImage img;
 String pat = "byte pat[][8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}";
+
+String animate = "";
+
 void setup() {
   
-  frameRate(24);
+  frameRate(3);
   int w = N*ledSize;
   size(w,w);
   clearLeds();
 rectMode(CORNER);
 
 img = loadImage("http://s13.postimg.org/9z74r9707/1_7.png");
+img = loadImage("1-7.png");
+
 //  setPattern(pattern);
 }
 
 void draw() {
-    display();
+  
+// interesting patterns when holding w 
+// after going into tetris mode by pressing t 
+ 
+ if(key=='i') imgtoMatrix(img);
+ 
+ if(key =='a' && frameCount%2==0 ){
+   // randomly switch between transition functions
+   float r =int(random(5));
+   if(r==4) slideUp();
+   if(r==3) switchRows(n%8,(n+3)%8);
+   if(r==2) slideLeft();
+   if(r==1) switchColumns(n%8,(n+3)%8);
+ }
+ 
+  if(key =='w' && frameCount%4==0 ){
+   // randomly switch between transition functions 
+   float r =int(random(3));
+   if(r==2) slideLeft();
+   if(r==1) switchColumns(n%8,(n+3)%8);
+ }
+   
+ if(key=='l') slideLeft();
+ if(key=='o') slideUp();
+ 
+ if(key=='r') switchRows(n%8,(n+3)%8);
+ if(key=='c') switchColumns(n%8,(n+3)%8);
+ 
+ if(key=='t') animate = "tetris"; 
+ 
+  
+ if (animate.equals("tetris")){
+    
+     if(frameCount%10==0) switchRows(n%8,(n+3)%8);
+     if(frameCount%3==0) slideUp();
+     if(key ==' ') animate="";
+ }
+
+
+   
+  
+ display();
+ n++;   
+    
    // println(leds[3][3]);
    
    //pattern = ++pattern % numPatterns;
@@ -28,13 +79,7 @@ void draw() {
 }
 
 void keyPressed(){
- if(key=='s') slidePattern();
- 
- if(key=='r') {n++; switchRows(n%8,(n+4)%8);}
- if(key=='c') {n++; switchColumns(n%8,(n+4)%8);}
- 
- if(key=='i') imgtoMatrix(img);
- 
+  
 }
 
 void switchRows(int n, int m){
@@ -57,38 +102,24 @@ void switchColumns(int n, int m){
 }
    
 
-void slidePattern() {
+void slideUp() {
   
   for (int j = 0; j < 8; j++) {
     for (int i = 0; i < 8; i++) {
-     //newleds[i][j] = 0;
      newleds[i][j]=leds[i][(j+1)%8];
     }
   }
-  //print(newleds);
   leds = newleds;
-  //print(leds);
+}
+
+void slideLeft() {
   
   for (int j = 0; j < 8; j++) {
     for (int i = 0; i < 8; i++) {
-     //newleds[i][j] = 0;
-     leds[i][j]=newleds[i][j];
+     newleds[j][i]=leds[(j+1)%8][i];
     }
   }
-  
-  /*
-  for (int l = 0; l < 8; l++) {
-    for (int i = 0; i < 7; i++) {
-      for (int j = 0; j < 8; j++) {
-        leds[j][i] = leds[j][i+1];
-      }
-    }
-    for (int j = 0; j < 8; j++) {
-      leds[j][7] = leds[j][0 + l];
-    }
-    //delay(del);
-  }*/
-  
+  leds = newleds;
 }
 
 void clearLeds() {
@@ -116,7 +147,9 @@ void imgtoMatrix(PImage img){
 void mousePressed(){
   int ix = int(map(mouseX, 0,width, 0,N));
   int jy = int(map(mouseY, 0,height, 0,N));
-  leds[ix][jy] = 1;
+  
+  //switch led:  0 <-> 1
+  leds[ix][jy] = (leds[ix][jy]+1)%2;
   ledstoString();
 }
 
