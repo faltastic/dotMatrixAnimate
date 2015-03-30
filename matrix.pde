@@ -1,5 +1,5 @@
 int N = 8;
-int ledSize = 50;
+int ledSize = 20;
 
 int n=1;
 
@@ -15,14 +15,14 @@ String animate = "";
 
 void setup() {
   
-  frameRate(3);
-  int w = N*ledSize;
-  size(w,w);
+  frameRate(6);
+  int w = int( N*ledSize);
+  size(20*8,20*8);
   clearLeds();
 rectMode(CORNER);
 
 img = loadImage("http://s13.postimg.org/9z74r9707/1_7.png");
-img = loadImage("1-7.png");
+//img = loadImage("1-7.png");
 
 //  setPattern(pattern);
 }
@@ -58,7 +58,7 @@ void draw() {
  
  if(key=='t') animate = "tetris"; 
  
-  
+  //here 
  if (animate.equals("tetris")){
     
      if(frameCount%10==0) switchRows(n%8,(n+3)%8);
@@ -79,7 +79,11 @@ void draw() {
 }
 
 void keyPressed(){
-  
+  if(key =='k' ) 
+  // this only works on arduino
+  // chladni pattern = {0x18, 0x24, 0x42, 0x81, 0x81, 0x42, 0x20, 0x18};
+    
+  if( key=='p') makeRandomPattern();
 }
 
 void switchRows(int n, int m){
@@ -122,6 +126,13 @@ void slideLeft() {
   leds = newleds;
 }
 
+void makeRandomPattern(){
+    for (int i = 0; i < N; i=i+int(random(1,3))) {
+    for (int j = 0; j < N; j=j+int(random(1,3))) {
+      leds[i][j] = int(random(0,2));
+    }
+  }
+}
 void clearLeds() {
   // Clear display array
   for (int i = 0; i < N; i++) {
@@ -176,7 +187,7 @@ void ledstoString(){
   }
   
   pat += "};";
- println(pat);
+  println(pat);
 }  
 
 
@@ -232,3 +243,4 @@ void display() {
     }
    }
 }
+
